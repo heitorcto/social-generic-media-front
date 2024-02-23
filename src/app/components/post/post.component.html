@@ -1,6 +1,6 @@
 <section class="my-2 container mx-auto">
   <div class="flex justify-center">
-    <div class="w-5/12">
+    <div class="w-full p-5 lg:w-5/12">
       <textarea class="textarea textarea-primary w-full" placeholder="Say something..." [formControl]="postContent" required></textarea>
       <div class="flex justify-end">
         <button (click)="createPost()" class="btn btn-primary">Create post</button>
@@ -11,8 +11,8 @@
 
 @if (findAllPosts(); as data) {
   @for(post of data; track post) {
-    <div class="container mx-auto flex justify-center my-12">
-      <div class="card w-5/12 bg-base-100 shadow-xl">
+    <div class="container mx-auto flex justify-center my-12 p-5">
+      <div class="card w-full lg:w-5/12 bg-base-100 shadow-xl">
         <div class="card-body">
           <h2 class="card-title">
             <div class="avatar">
@@ -29,7 +29,7 @@
           </h2>
           <p class="mt-3">{{ post.content }}</p>
         </div>
-        <div class="ml-3 flex items-center gap-3 p-5">
+        <div class="ml-3 flex items-center gap-3 p-2">
           <div>
             <button class="btn btn-square no-animation" [class.text-red-500]="post.liked" (click)="likePost(post.id, !post.liked)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
