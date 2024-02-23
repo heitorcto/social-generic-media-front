@@ -1,9 +1,9 @@
 <dialog id="my_modal_1" class="modal" [open]="modal()">
   <div class="modal-box">
     <section class="mb-1">
-      <textarea class="textarea w-full textarea-primary" placeholder="Say something..."></textarea>
+      <textarea class="textarea w-full textarea-primary" placeholder="Say something..." [formControl]="commentContent" required></textarea>
       <div class="flex justify-end mt-1">
-        <button class="btn btn-primary">Place comment</button>
+        <button class="btn btn-primary" (click)="postComment()">Place comment</button>
       </div>
     </section>
     @if (findAllComments(); as data) {

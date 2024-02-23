@@ -1,6 +1,6 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { Comment } from '../interfaces/comment';
-import { shareReplay, tap } from 'rxjs';
+import { Observable, shareReplay, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -20,5 +20,11 @@ export class CommentService {
 
   public getFindAll(): Signal<Comment[] | null> {
     return this.comments.asReadonly();
+  }
+
+  public createComment(post_id: number, content: string): Observable<Comment> {
+    return this.http
+      .post<Comment>(this.url, { post_id, content })
+      .pipe(shareReplay());
   }
 }
