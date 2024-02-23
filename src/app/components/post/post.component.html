@@ -1,7 +1,7 @@
 <section class="my-2 container mx-auto">
   <div class="flex justify-center">
     <div class="w-5/12">
-      <textarea class="textarea textarea-primary w-full" placeholder="Say something..." [(ngModel)]="postContent" ></textarea>
+      <textarea class="textarea textarea-primary w-full" placeholder="Say something..." [formControl]="postContent" required></textarea>
       <div class="flex justify-end">
         <button (click)="createPost()" class="btn btn-primary">Create post</button>
       </div>

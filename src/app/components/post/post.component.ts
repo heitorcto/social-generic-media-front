@@ -7,30 +7,41 @@ import {
   signal,
 } from '@angular/core';
 import { PostService } from '../../services/post.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { concatMap } from 'rxjs';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { CommentsModalComponent } from '../comments-modal/comments-modal.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-post',
   standalone: true,
   imports: [
-    CommonModule,
+    DatePipe,
     FormsModule,
     SkeletonComponent,
     CommentsModalComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './post.component.html',
 })
 export class PostComponent implements OnInit {
+  public postService: PostService = inject(PostService);
+
   @ViewChild(CommentsModalComponent) commentsModal!: CommentsModalComponent;
 
-  public postService: PostService = inject(PostService);
   public findAllPosts = this.postService.getFindAll();
-  public postContent: WritableSignal<string> = signal<string>('');
+
   public modalOpen: WritableSignal<boolean> = signal<boolean>(false);
+
+  public postContent: FormControl<string | null> = new FormControl<
+    string | null
+  >('', [Validators.minLength(5), Validators.required]);
 
   ngOnInit(): void {
     this.postService.findAll().subscribe();
@@ -41,10 +52,12 @@ export class PostComponent implements OnInit {
   }
 
   createPost(): void {
-    this.postService
-      .create(this.postContent())
-      .pipe(concatMap(() => this.postService.findAll()))
-      .subscribe();
+    if (this.postContent.valid) {
+      this.postService
+        .create(String(this.postContent.value))
+        .pipe(concatMap(() => this.postService.findAll()))
+        .subscribe();
+    }
   }
 
   likePost(id: number, liked: boolean): void {
