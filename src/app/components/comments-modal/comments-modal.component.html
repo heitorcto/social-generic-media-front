@@ -1,0 +1,36 @@
+<dialog id="my_modal_1" class="modal" [open]="modal()">
+  <div class="modal-box">
+    <section class="mb-1">
+      <textarea class="textarea w-full textarea-primary" placeholder="Say something..."></textarea>
+      <div class="flex justify-end mt-1">
+        <button class="btn btn-primary">Place comment</button>
+      </div>
+    </section>
+    @if (findAllComments(); as data) {
+      @if (data.length) {
+        <h3 class="font-bold text-lg mb-5">All comments</h3>
+        @for (comment of data; track comment) {
+          <section class="border p-3 rounded-lg border-gray-600 my-3">
+            <div class="flex items-center gap-2">
+              <div class="avatar">
+                <div class="w-10 rounded-full">
+                  <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                </div>
+              </div>
+              <div class="font-semibold">
+                {{ comment.userName }}
+              </div>
+            </div>
+            <p class="py-4"> {{ comment.content }}</p>
+          </section>
+        }
+      } @else {
+        <h3 class="font-bold text-lg mb-5">No comments yet</h3>
+      }
+    }
+    <div class="modal-action">
+      <button class="btn" (click)="toggleModal()">Close</button>
+    </div>
+  </div>
+</dialog>
+<div [class.hidden]="!modal()" class="bg-[#0006] dark:bg-bg-[#0006] fixed inset-0 z-40"></div>

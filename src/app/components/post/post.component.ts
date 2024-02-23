@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  ViewChild,
   WritableSignal,
   inject,
   signal,
@@ -9,37 +10,34 @@ import { PostService } from '../../services/post.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { concatMap } from 'rxjs';
-import { CommentService } from '../../services/comment.service';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { CommentsModalComponent } from '../comments-modal/comments-modal.component';
 
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SkeletonComponent,
+    CommentsModalComponent,
+  ],
   templateUrl: './post.component.html',
 })
 export class PostComponent implements OnInit {
-  public postService: PostService = inject(PostService);
-  public commentService: CommentService = inject(CommentService);
+  @ViewChild(CommentsModalComponent) commentsModal!: CommentsModalComponent;
 
+  public postService: PostService = inject(PostService);
   public findAllPosts = this.postService.getFindAll();
-  public findAllComments = this.commentService.getFindAll();
-  public modal: WritableSignal<boolean> = signal<boolean>(false);
   public postContent: WritableSignal<string> = signal<string>('');
-  public selectedPost: WritableSignal<number> = signal<number>(0);
+  public modalOpen: WritableSignal<boolean> = signal<boolean>(false);
 
   ngOnInit(): void {
     this.postService.findAll().subscribe();
   }
 
-  toggleModal(id?: number): void {
-    this.modal.set(!this.modal());
-
-    if (id) {
-      this.selectedPost.set(id);
-      this.commentService.findAll(this.selectedPost()).subscribe();
-    } else {
-      this.selectedPost.set(0);
-    }
+  callModalFunction(id: number): void {
+    this.commentsModal.toggleModal(id);
   }
 
   createPost(): void {
